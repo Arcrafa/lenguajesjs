@@ -1,66 +1,455 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <% include ../partials/header.ejs %>
-</head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .app-form input {
+            border-radius: 0;
+        }
 
+        .tareaTerminada {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
 <body>
 
-  <% include ../partials/nav.ejs %>
 
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="/lang-logo.png">
-    </a>
-    <h1>Getting Started on Heroku with Node.js</h1>
-    <p>This is a sample Node application deployed to Heroku. It's a reasonably simple app - but a good foundation for understanding how to get the most out of the Heroku platform.</p>
-    <a type="button" class="btn btn-lg btn-default" href="https://devcenter.heroku.com/articles/getting-started-with-nodejs"><span class="glyphicon glyphicon-flash"></span> Getting Started on Heroku with Node.js</a>
-    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/heroku/node-js-getting-started"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
-  </div>
-</div>
-<div class="container">
-  <div class="alert alert-info text-center" role="alert">
-    To deploy your own copy, and learn the fundamentals of the Heroku platform, head over to the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs" class="alert-link">Getting Started on Heroku with Node.js</a> tutorial.
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-info-sign"></span> How this sample app works</h3>
-      <ul>
-        <li>This app was deployed to Heroku, either using Git or by using <a href="https://github.com/heroku/node-js-getting-started">Heroku Button</a> on the repository.</li>
+<div id="vocabulario" class="">
 
-        <li>When Heroku received the source code, it fetched all the dependencies in the <a href="https://github.com/heroku/node-js-getting-started/blob/main/package.json">package.json</a>, creating a deployable slug.</li>
-        <li>The platform then spins up a dyno, a lightweight container that provides an isolated environment in which the slug can be mounted and executed.</li>
-        <li>You can scale your app, manage it, and deploy over <a href="https://addons.heroku.com/">150 add-on services</a>, from the Dashboard or CLI.</li>
-      </ul>
+
+    <div class="col-sm-4 ">
+
+
+        <!-- form -->
+        <div class="panel panel-default">
+
+            <h2 class="text-center">Confuguracion</h2>
+
+            <form class="navbar-form  app-form">
+                <div>
+
+                    <div class="form-group">
+                        <span class="">Agregar alfabeto  </span>
+                        <input type="text" class="form-control" placeholder="nombre" v-model="name_new_A">
+                        <button type="submit" class="btn btn-default" v-on:click="new_alfabeto">agregar</button>
+
+                    </div>
+                    <br>
+                </div>
+                <div class="form-group">
+                    <span class="">Agregar lenguaje  </span>
+                    <input type="text" class="form-control" placeholder="nombre" v-model="name_new_L">
+                    <select v-model="alfabeto_new_lenguaje" class="form-control">
+
+                        <option v-for="alfabeto in Array.from(alfabetos) " :value="alfabeto.nombre">
+                            {{alfabeto.nombre}}
+                        </option>
+
+                    </select>
+
+
+                    <button type="submit" class="btn btn-default" v-on:click="new_lenguaje">agregar</button>
+                </div>
+
+
+            </form>
+
+        </div>
+
+        <br>
+
+        <br>
+        <!-- form -->
+        <div class="panel panel-default">
+            <h2 class="text-center">Sobre los alfabetos</h2>
+            <form class="app-form">
+                <h4>Ingrese un simbolo para el alfabeto</h4>
+                <input id="simbolo" type="text" class="form-control" v-model="simbolo">
+                <h4> Escoja un alfabeto</h4>
+                <select v-model="select_add_simbolo" class="form-control" id="select-alfabeto">
+                    <option v-for="alfabeto in Array.from(alfabetos) " :value="alfabeto.nombre">
+                        {{alfabeto.nombre}}
+                    </option>
+
+
+                </select>
+                <button class="btn btn-block btn-primary"
+                        v-on:click="addSimbolo">
+                    Agregar simbolo
+                </button>
+
+
+                </select>
+                <div v-for="alfabeto in Array.from(alfabetos) ">
+                    <h4><span>Alfabeto {{alfabeto.nombre}}:{{Array.from(alfabeto.simbolos)}}</span></h4>
+                    <br>
+                </div>
+                <div class="form-group">
+                    <span class="">Seleccione alfabetos para operar  </span>
+                    <select v-model="select_a1" class="form-control">
+
+                        <option v-for="alfabeto in Array.from(alfabetos) " :value="alfabeto.nombre">
+                            {{alfabeto.nombre}}
+                        </option>
+
+                    </select>
+                    <select v-model="select_a2" class="form-control">
+
+                        <option v-for="alfabeto in Array.from(alfabetos) " :value="alfabeto.nombre">
+                            {{alfabeto.nombre}}
+                        </option>
+
+                    </select>
+
+
+                </div>
+                <div v-if="a1!=undefined && a2!=undefined">
+                    <h4><span>Union {{a1.nombre}} y {{a2.nombre}}:{{Array.from(this.union(this.a1.simbolos,this.a2.simbolos))}}</span>
+                    </h4>
+
+                    <h4>
+                        <span>Diferencia {{a1.nombre}} y {{a2.nombre}}:{{Array.from(this.difference(this.a1.simbolos,this.a2.simbolos))}}</span>
+                    </h4>
+
+                    <h4>
+                        <span>Intercepcion {{a1.nombre}} y {{a2.nombre}}:{{Array.from(this.intersection(this.a1.simbolos,this.a2.simbolos))}}</span>
+                    </h4>
+                </div>
+
+            </form>
+        </div>
+
     </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-link"></span> Next Steps</h3>
-      <ul>
-        <li>If you are following the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started</a> guide, then please head back to the tutorial and follow the next steps!</li>
-        <li>If you deployed this app by deploying the Heroku Button, then in a command line shell, run:</li>
-        <ul>
-          <li><code>git clone https://github.com/heroku/node-js-getting-started.git</code> - this will create a local copy of the source code for the app</li>
-          <li><code>cd node-js-getting-started</code> - change directory into the local source code repository</li>
-          <li><code>heroku git:remote -a &lt;your-app-name></code> - associate the Heroku app with the repository</li>
-          <li>You'll now be set up to run the app locally, or <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs#push-local-changes">deploy changes</a> to Heroku</li>
-        </ul>
-      </ul>
-      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started on Heroku with Node.js</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/deploying-nodejs">Deploying Node Apps on Heroku</a></li>
-      </ul>
+
+
+    <div class="col-sm-4 ">
+
+
+        <!-- form -->
+        <div class="panel panel-default">
+            <h2 class="text-center">Sobre los lenguajes</h2>
+            <form class="app-form">
+                <h3>Ingrese una palabra para el alfabeto</h3>
+                <input id="palabra" type="text" class="form-control" v-model="palabra">
+                <h3> Escoja un lenguaje</h3>
+                <select v-model="select_add_palabra" class="form-control">
+                    <option v-for="nombre in nombres_lenguajes " :value="nombre">{{nombre}}</option>
+                </select>
+                <button class="btn btn-block btn-primary"
+                        v-on:click="addpalabra">Agregar palabra
+                </button>
+
+
+                <div>
+                    <h3><span>lenguajes ingresados</span></h3>
+                    <div v-for="nombre in nombres_lenguajes ">
+                        <h3><span>Lenguaje {{nombre}}:{{Array.from(getLenguaje(nombre).palabras)}}</span></h3>
+                        <br>
+                        <h4>
+                            <span>Potencia de {{nombre}} :{{Array.from(concat_lenguaje(getLenguaje(nombre).palabras,getLenguaje(nombre).palabras))}}</span>
+                        </h4>
+
+                        <h4>
+                            <span>Inversa de {{nombre}}:{{Array.from(inversa_lenguaje(getLenguaje(nombre).palabras))}}</span>
+                        </h4>
+                        <h4>
+                            <span>Cardinalidad de {{nombre}}:{{Array.from(getLenguaje(nombre).palabras)}}</span>
+                        </h4>
+                        <br>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <h3><span class="">Seleccione lenguajes para operar  </span></h3>
+                    <select v-model="select_l1" class="form-control">
+
+                        <option v-for="nombre in nombres_lenguajes " :value="nombre">
+                            {{nombre}}
+                        </option>
+
+                    </select>
+                    <select v-model="select_l2" class="form-control">
+
+                        <option v-for="nombre in nombres_lenguajes " :value="nombre">
+                            {{nombre}}
+                        </option>
+                    </select>
+
+                </div>
+
+                <div v-if="l1!=undefined && l2!=undefined">
+                    <h4>
+                        <span>Union {{l1.nombre}} y {{l2.nombre}}:{{Array.from(this.union(l1.palabras,l2.palabras))}}</span>
+                    </h4>
+
+                    <h4>
+                        <span>Diferencia {{l1.nombre}} y {{l2.nombre}}:{{Array.from(this.difference(l1.palabras,l2.palabras))}}</span>
+                    </h4>
+
+                    <h4>
+                        <span>Intercepcion {{l1.nombre}} y {{l2.nombre}}:{{Array.from(this.intersection(l1.palabras,l2.palabras))}}</span>
+                    </h4>
+                    <h4>
+                        <span>Concatenacion {{l1.nombre}} y {{l2.nombre}}:{{Array.from(this.concat_lenguaje(l1.palabras,l2.palabras))}}</span>
+                    </h4>
+                </div>
+
+
+            </form>
+
+
+        </div>
+
     </div>
-  </div> <!-- row -->
-   <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
-  </div>
+    <div class="col-sm-4 ">
+
+        <div class="panel panel-default">
+            <h2 class="text-center">Sobre las palabras</h2>
+            <!-- table -->
+            <table class="table">
+
+                <div class="form-group has-success has-feedback">
+                    <label class="control-label sr-only" for="inputGroupSuccess4">Input group with success</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">Busqueda</span>
+                        <input v-model="busqueda" type="text" class="form-control" id="inputGroupSuccess4"
+                               aria-describedby="inputGroupSuccess4Status">
+
+
+                    </div>
+                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+
+                    <span id="inputGroupSuccess4Status" class="sr-only">(success)</span>
+                </div>
+                <thead>
+
+                <tr>
+                    <th>Palabra</th>
+                    <th>Inversa</th>
+                    <th>Cardinalidad</th>
+                </tr>
+                </thead>
+                <tbody v-show="palabras.length!=0">
+                <tr v-for="palabra in palabras"
+                    v-show="busqueda.length<0 || palabra.includes(busqueda)">
+
+                    <td>
+                        <span>{{palabra}}</span>
+                    </td>
+                    </td>
+                    <td>
+                        <span>{{palabra.split("").reverse().join("")}}</span>
+                    </td>
+
+                    <td>
+                        <span>{{palabra.length}}</span>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
 </div>
 
 
+<script src="https://unpkg.com/vue"></script>
+<script type="text/javascript">
+    var AppLenguajes = new Vue({
+        el: '#vocabulario',
+        data: {
+            alfabetos: new Set([]),
+            simbolo: '',
+            select_add_simbolo: '',
+            palabra: '',
+            select_lenguaje: '',
+            busqueda: '',
+            name_new_A: '',
+            name_new_L: '',
+            alfabeto_new_lenguaje: '',
+            select_a1: '',
+            select_a2: '',
+            nombres_lenguajes: [],
+            select_add_palabra: '',
+            select_l1: '',
+            select_l2: '',
+            palabras: []
+
+        },
+        methods: {
+            addSimbolo: function (e) {
+                e.preventDefault();
+
+                if (this.simbolo.length == 1) this.simbolo += '-'
+
+
+                if (this.simbolo.length > 2) this.simbolo = this.simbolo.substring(0, 2);
+
+
+                Array.from(this.alfabetos).forEach(alfabeto => {
+                    if (alfabeto.nombre == this.select_add_simbolo) alfabeto.simbolos.add(this.simbolo)
+                })
+                console.log(this.alfabetos)
+
+                this.simbolo = '';
+            },
+            addpalabra: function (e) {
+
+                e.preventDefault();
+                if (this.palabra.length % 2 != 0) this.palabra += '-'
+
+
+                Array.from(this.alfabetos).forEach(alfabeto => {
+
+                    Array.from(alfabeto.lenguajes).forEach(lenguaje => {
+
+                        if (lenguaje.nombre == this.select_add_palabra) {
+                            for (let i = 0; i < this.palabra.length; i++) {
+                                let simb = this.palabra.substring(i, i + 2);
+                                let simb_esta = false
+                                Array.from(alfabeto.simbolos).forEach(simbolo => {
+                                    if (simb == simbolo) simb_esta = true
+                                })
+
+                                if (!simb_esta) {
+
+                                    alert('La palabra: ' + this.palabra + " no cumple con el alfabeto " + alfabeto.nombre)
+                                    return
+                                }
+                                i += 1
+                            }
+                            lenguaje.palabras.add(this.palabra)
+                            this.palabras.push(this.palabra)
+                        } else {
+                            alert("escoja un lenguaje para agregarle palabras")
+                        }
+
+
+                    })
+
+                })
+
+                this.palabra = '';
+
+            },
+
+
+            union: function (setA, setB) {
+                let _union = new Set(setA)
+                for (let elem of setB) {
+                    _union.add(elem)
+                }
+                return _union
+            },
+
+            intersection: function (setA, setB) {
+                let _intersection = new Set()
+                for (let elem of setB) {
+                    if (setA.has(elem)) {
+                        _intersection.add(elem)
+                    }
+                }
+                return _intersection
+            },
+            difference: function (setA, setB) {
+                let _difference = new Set(setA)
+                for (let elem of setB) {
+                    _difference.delete(elem)
+                }
+                return _difference
+            },
+
+            concat_lenguaje: function (lenguajeA, lenguajeB) {
+
+                let concat = new Set([])
+
+                Array.from(lenguajeA).forEach(elementA => Array.from(lenguajeB).forEach(elementB => concat.add(elementA + elementB)));
+
+                return concat
+            },
+
+            inversa_lenguaje: function (lenguaje) {
+
+                let inv = new Set([])
+
+                Array.from(lenguaje).forEach(element => inv.add(element.split("").reverse().join("")));
+
+                return inv
+
+            },
+            new_alfabeto: function (e) {
+                e.preventDefault();
+
+                this.alfabetos.add({
+                    nombre: this.name_new_A,
+                    simbolos: new Set([]),
+                    lenguajes: new Set([])
+                })
+                this.name_new_A = ''
+            },
+            new_lenguaje: function (e) {
+                e.preventDefault();
+
+                Array.from(this.alfabetos).forEach(alfabeto => {
+                    if (alfabeto.nombre == this.alfabeto_new_lenguaje) alfabeto.lenguajes.add({
+                        nombre: this.name_new_L,
+                        palabras: new Set([]),
+                        n_alfabeto: alfabeto.nombre
+                    })
+                })
+                this.nombres_lenguajes.push(this.name_new_L)
+                this.name_new_L = ''
+                console.log(this.alfabetos)
+            },
+            getAlfabeto: function (nombre) {
+                var a
+                Array.from(this.alfabetos).forEach(alfabeto => {
+                    if (alfabeto.nombre == nombre) {
+                        console.log(alfabeto)
+                        a = alfabeto
+                    }
+
+                })
+                return a
+            },
+            getLenguaje: function (nombre) {
+                var l
+                Array.from(this.alfabetos).forEach(alfabeto => {
+
+                    Array.from(alfabeto.lenguajes).forEach(lenguaje => {
+                        if (lenguaje.nombre == nombre) {
+                            l = lenguaje
+                        }
+                    })
+
+                })
+                console.log(l)
+                return l
+            },
+
+        },
+        computed: {
+            a1: function () {
+                return this.getAlfabeto(this.select_a1)
+            },
+            a2: function () {
+                return this.getAlfabeto(this.select_a2)
+
+            },
+            l1: function () {
+                return this.getLenguaje(this.select_l1)
+            },
+            l2: function () {
+                return this.getLenguaje(this.select_l2)
+
+            }
+        }
+
+    });
+</script>
 </body>
 </html>
