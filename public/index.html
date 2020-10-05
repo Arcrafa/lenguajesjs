@@ -420,6 +420,8 @@
             addpalabra: function (e) {
 
                 e.preventDefault();
+                if (this.select_add_palabra=='')alert("escoja un lenguaje para agregarle palabras")
+
                 if (this.palabra.length % 2 != 0) this.palabra += '-'
 
 
@@ -444,8 +446,6 @@
                             }
                             lenguaje.palabras.add(this.palabra)
                             this.palabras.push(this.palabra)
-                        } else {
-                            alert("escoja un lenguaje para agregarle palabras")
                         }
 
 
