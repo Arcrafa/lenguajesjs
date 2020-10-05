@@ -513,7 +513,10 @@
             },
             new_lenguaje: function (e) {
                 e.preventDefault();
-
+                if(this.alfabeto_new_lenguaje==''){
+                    alert("primero ingrese y escoja un algabeto para el lenguaje")
+                    return
+                }
                 Array.from(this.alfabetos).forEach(alfabeto => {
                     if (alfabeto.nombre == this.alfabeto_new_lenguaje) alfabeto.lenguajes.add({
                         nombre: this.name_new_L,
